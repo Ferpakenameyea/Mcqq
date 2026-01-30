@@ -1,4 +1,4 @@
-package com.nexora.onebot.message;
+package com.nexora.onebot.events.message;
 
 import java.util.Optional;
 import java.util.OptionalInt;

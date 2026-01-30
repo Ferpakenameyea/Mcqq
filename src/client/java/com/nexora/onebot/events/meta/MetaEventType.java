@@ -1,4 +1,4 @@
-package com.nexora.onebot.meta;
+package com.nexora.onebot.events.meta;
 
 import com.google.gson.annotations.SerializedName;
 

@@ -9,8 +9,8 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
 import com.nexora.Mcqq;
-import com.nexora.onebot.message.MessageEventMessage;
-import com.nexora.onebot.meta.MetaEventMessage;
+import com.nexora.onebot.events.message.MessageEventMessage;
+import com.nexora.onebot.events.meta.MetaEventMessage;
 
 public abstract class OnebotMessage {
     @SerializedName("time")

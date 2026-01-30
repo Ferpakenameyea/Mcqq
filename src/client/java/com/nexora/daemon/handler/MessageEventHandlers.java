@@ -2,7 +2,7 @@ package com.nexora.daemon.handler;
 
 import java.util.List;
 
-import com.nexora.onebot.message.GroupMesssageEventMessage;
+import com.nexora.onebot.events.message.GroupMesssageEventMessage;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ChatComponent;

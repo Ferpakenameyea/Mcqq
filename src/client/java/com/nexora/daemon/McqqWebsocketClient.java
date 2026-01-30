@@ -17,8 +17,8 @@ import com.nexora.daemon.handler.MetaEventHandlers;
 import com.nexora.onebot.OnebotMessage;
 import com.nexora.onebot.api.SendMessageRequest;
 import com.nexora.onebot.api.WebSocketRequest;
-import com.nexora.onebot.message.GroupMesssageEventMessage;
-import com.nexora.onebot.meta.LifeCycleMessage;
+import com.nexora.onebot.events.message.GroupMesssageEventMessage;
+import com.nexora.onebot.events.meta.LifeCycleMessage;
 
 public class McqqWebsocketClient extends WebSocketClient {
 

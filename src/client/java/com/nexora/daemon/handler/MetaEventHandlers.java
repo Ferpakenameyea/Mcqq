@@ -1,6 +1,6 @@
 package com.nexora.daemon.handler;
 
-import com.nexora.onebot.meta.LifeCycleMessage;
+import com.nexora.onebot.events.meta.LifeCycleMessage;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;

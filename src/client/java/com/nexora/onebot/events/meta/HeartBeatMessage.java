@@ -1,4 +1,4 @@
-package com.nexora.onebot.meta;
+package com.nexora.onebot.events.meta;
 
 public class HeartBeatMessage extends MetaEventMessage {
     private long interval;
