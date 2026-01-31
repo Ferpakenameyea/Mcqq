@@ -3,6 +3,7 @@ package com.nexora;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.nexora.config.McqqConfig;
 import com.nexora.daemon.McqqDaemon;
+import com.nexora.screen.ViewImageScreen;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -10,6 +11,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ChatComponent;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
@@ -38,6 +40,13 @@ public class McqqClient implements ClientModInitializer {
 							restartDaemon();
 							return 1;
 						}))
+					.then(literal("img")
+						.then(argument("file", StringArgumentType.string())
+							.executes(context -> {
+								String imageUrl = context.getArgument("file", String.class);
+								viewImage(imageUrl);
+								return 1;
+							})))
 			);
 
 			dispatcher.register(
@@ -49,6 +58,16 @@ public class McqqClient implements ClientModInitializer {
 							return 1;
 						}))
 			);
+		});
+	}
+
+	private void viewImage(String file) {
+		Mcqq.LOGGER.info("Viewing image: {}", file);
+		
+		Screen screen = new ViewImageScreen(file);
+		
+		Minecraft.getInstance().tell(() -> {
+			Minecraft.getInstance().setScreen(screen);
 		});
 	}
 

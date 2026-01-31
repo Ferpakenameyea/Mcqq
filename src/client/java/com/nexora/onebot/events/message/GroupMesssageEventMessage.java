@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
+import com.nexora.onebot.events.message.array.MessageSegment;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -39,7 +40,6 @@ public final class GroupMesssageEventMessage extends MessageEventMessage {
     }
 
     public List<Component> buildMinecraftMessage() {
-        // TODO: do array message
         Instant instant = Instant.ofEpochSecond(timestamp);
         LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, java.time.ZoneId.systemDefault());
 
@@ -57,6 +57,13 @@ public final class GroupMesssageEventMessage extends MessageEventMessage {
                     localDateTime.getMinute(),
                     localDateTime.getSecond()
                 ))).withStyle(ChatFormatting.GRAY),
-            literal(rawMessage));
+            buildMinecraftLiteral());
+    }
+
+    private Component buildMinecraftLiteral() {
+        return getDeserializedMessages().stream()
+            .map(MessageSegment::toComponent)
+            .reduce((c1, c2) -> c1.append(c2))
+            .orElse(literal("<No message>"));
     }
 }

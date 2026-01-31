@@ -1,10 +1,17 @@
 package com.nexora.daemon;
 
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.nexora.Mcqq;
+import com.nexora.common.Pot;
+import com.nexora.common.Result;
 import com.nexora.config.McqqConfig;
+import com.nexora.onebot.api.GetImageRequest;
+import com.nexora.onebot.api.ImageResponse;
 import com.nexora.onebot.api.MessageType;
+import com.nexora.onebot.api.Response;
 import com.nexora.onebot.api.SendMessageRequest;
 
 import net.minecraft.ChatFormatting;
@@ -88,6 +95,23 @@ public class McqqDaemon {
         }
         SendMessageRequest request = buildMessageRequest(message);
         client.sendQQMessage(request);
+    }
+
+    public Optional<ImageResponse> getImage(String file) {
+        GetImageRequest request = new GetImageRequest();
+        request.setFile(file);
+        
+        Pot<Response<ImageResponse>> pot = client.getImage(request);
+        Result<Response<ImageResponse>> result = pot.get(5, TimeUnit.SECONDS);
+    
+        if (result.isSuccess()) {
+            Mcqq.LOGGER.info("image received {}", file);
+            return Optional.of(result.getValue().getData());
+        }
+
+        Mcqq.LOGGER.error("failed to get image ({}) " + result.getStatus());
+
+        return Optional.empty();
     }
 
     private SendMessageRequest buildMessageRequest(String message) {
