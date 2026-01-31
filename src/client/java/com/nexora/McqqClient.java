@@ -1,8 +1,13 @@
 package com.nexora;
 
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.nexora.config.McqqConfig;
 import com.nexora.daemon.McqqDaemon;
+import com.nexora.onebot.events.message.array.MessageSegment;
+import com.nexora.onebot.events.message.array.MessageSegmentType;
+import com.nexora.onebot.events.message.array.ReplySegmentData;
+import com.nexora.onebot.events.message.array.TextSegmentData;
 import com.nexora.screen.ViewImageScreen;
 
 import net.fabricmc.api.ClientModInitializer;
@@ -17,6 +22,7 @@ import net.minecraft.network.chat.Component;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
+import java.util.List;
 import java.util.OptionalInt;
 
 public class McqqClient implements ClientModInitializer {
@@ -54,11 +60,39 @@ public class McqqClient implements ClientModInitializer {
 					.then(argument("content", StringArgumentType.greedyString())
 						.executes(context -> {
 							String message = context.getArgument("content", String.class);
+							// TODO: parse to a message array
 							sendMessage(message);
 							return 1;
 						}))
 			);
+
+			dispatcher.register(
+				literal("qqr")
+					.then(argument("id", IntegerArgumentType.integer())
+						.then(argument("content", StringArgumentType.greedyString())
+							.executes(context -> {
+								Integer replyMessageId = context.getArgument("id", Integer.class);
+								String message = context.getArgument("content", String.class);
+								sendReplyMessage(replyMessageId, message);
+								return 1;
+							})
+						)
+					)
+			);
 		});
+	}
+
+	private void sendReplyMessage(Integer replyMessageId, String message) {
+		McqqDaemon.getInstance().sendMessage(List.of(
+			new MessageSegment<ReplySegmentData>(MessageSegmentType.REPLY, new ReplySegmentData(replyMessageId)),
+			new MessageSegment<TextSegmentData>(MessageSegmentType.TEXT, new TextSegmentData(message))
+		));
+
+		// TODO: Show info of the message replied got from napcat api
+		Minecraft.getInstance().gui.getChat().addMessage(
+			Component.literal("[REPLY] You").withStyle(ChatFormatting.GREEN)
+				.append(Component.literal(": " + message).withStyle(ChatFormatting.WHITE))
+		);
 	}
 
 	private void viewImage(String file) {

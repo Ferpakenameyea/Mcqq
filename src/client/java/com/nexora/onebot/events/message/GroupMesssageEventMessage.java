@@ -8,7 +8,10 @@ import com.google.gson.annotations.SerializedName;
 import com.nexora.onebot.events.message.array.MessageSegment;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+
 import static net.minecraft.network.chat.Component.literal;
 
 
@@ -52,11 +55,19 @@ public final class GroupMesssageEventMessage extends MessageEventMessage {
                         userId
                     )).withStyle(ChatFormatting.GOLD)
                 )
-                .append(literal(String.format("%d:%d:%d", 
+                .append(literal(String.format("%d:%d:%d ", 
                     localDateTime.getHour(),
                     localDateTime.getMinute(),
                     localDateTime.getSecond()
-                ))).withStyle(ChatFormatting.GRAY),
+                ))).withStyle(ChatFormatting.GRAY)
+                .append(literal("[@]")
+                    .withStyle(style -> 
+                        style.withColor(ChatFormatting.GOLD)
+                            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, literal("reply to this message")))
+                            .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, 
+                                String.format("/qqr %d ", messageId)
+                            ))
+                    )),
             buildMinecraftLiteral());
     }
 

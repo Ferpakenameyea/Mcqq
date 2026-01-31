@@ -12,6 +12,7 @@ import com.nexora.onebot.events.message.array.MessageSegment;
 import com.nexora.onebot.events.message.array.MessageSegmentData;
 import com.nexora.onebot.events.message.array.MessageSegmentType;
 import com.nexora.onebot.events.message.array.RawSegment;
+import com.nexora.onebot.events.message.array.ReplySegmentData;
 import com.nexora.onebot.events.message.array.TextSegmentData;
 import com.nexora.onebot.events.message.array.UnsupportedSegmentData;
 
@@ -72,6 +73,10 @@ public abstract class MessageEventMessage extends OnebotMessage {
                     case IMAGE -> new MessageSegment<>(
                         MessageSegmentType.IMAGE,
                         gson.fromJson(seg.getData(), ImageSegmentData.class) 
+                    );
+                    case REPLY -> new MessageSegment<>(
+                        MessageSegmentType.REPLY, 
+                        gson.fromJson(seg.getData(), ReplySegmentData.class)
                     );
                     default -> new MessageSegment<>(
                         seg.getType(),

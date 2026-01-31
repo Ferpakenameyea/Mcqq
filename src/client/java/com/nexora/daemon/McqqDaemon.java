@@ -1,5 +1,7 @@
 package com.nexora.daemon;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -13,6 +15,9 @@ import com.nexora.onebot.api.ImageResponse;
 import com.nexora.onebot.api.MessageType;
 import com.nexora.onebot.api.Response;
 import com.nexora.onebot.api.SendMessageRequest;
+import com.nexora.onebot.events.message.array.MessageSegment;
+import com.nexora.onebot.events.message.array.MessageSegmentType;
+import com.nexora.onebot.events.message.array.TextSegmentData;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -97,6 +102,14 @@ public class McqqDaemon {
         client.sendQQMessage(request);
     }
 
+    public void sendMessage(List<MessageSegment<?>> message) {
+        if (!ensureRunning()) {
+            return;
+        }
+        SendMessageRequest request = buildMessageRequest(message);
+        client.sendQQMessage(request);
+    }
+
     public Optional<ImageResponse> getImage(String file) {
         GetImageRequest request = new GetImageRequest();
         request.setFile(file);
@@ -116,13 +129,26 @@ public class McqqDaemon {
 
     private SendMessageRequest buildMessageRequest(String message) {
         SendMessageRequest request = new SendMessageRequest();
+        setMessageTarget(request);
+        request.setMessage(Collections.singletonList(
+            new MessageSegment<TextSegmentData>(MessageSegmentType.TEXT, new TextSegmentData(message))
+        ));
+        return request;
+    }
+
+    private SendMessageRequest buildMessageRequest(List<MessageSegment<?>> message) {
+        SendMessageRequest request = new SendMessageRequest();
+        setMessageTarget(request);
+        request.setMessage(message);
+        return request;
+    }
+
+    private void setMessageTarget(SendMessageRequest request) {
         request.setMessageType(sendingType);
         if (sendingType == MessageType.GROUP) {
             request.setGroupId(sendingId);
         } else {
             request.setUserId(sendingId);
         }
-        request.setMessage(message);
-        return request;
     }
 }

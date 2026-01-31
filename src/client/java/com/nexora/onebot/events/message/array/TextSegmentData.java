@@ -14,4 +14,8 @@ public final class TextSegmentData extends MessageSegmentData {
     public MutableComponent toComponent() {
         return Component.literal(text);
     }
+
+    public TextSegmentData(String text) {
+        this.text = text;
+    }
 }

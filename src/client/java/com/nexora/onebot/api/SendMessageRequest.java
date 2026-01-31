@@ -1,6 +1,9 @@
 package com.nexora.onebot.api;
 
+import java.util.List;
+
 import com.google.gson.annotations.SerializedName;
+import com.nexora.onebot.events.message.array.MessageSegment;
 
 public final class SendMessageRequest {
     public static final String ACTION = "send_msg";
@@ -15,12 +18,12 @@ public final class SendMessageRequest {
     private Long groupId;
 
     @SerializedName("message")
-    private String message;
+    private List<MessageSegment<?>> message;
 
     @SerializedName("auto_escape")
     private boolean autoEscape;
 
-    public void setMessage(String message) {
+    public void setMessage(List<MessageSegment<?>> message) {
         this.message = message;
     }
 
@@ -44,7 +47,7 @@ public final class SendMessageRequest {
         return groupId;
     }
 
-    public String getMessage() {
+    public List<MessageSegment<?>> getMessage() {
         return message;
     }
 
